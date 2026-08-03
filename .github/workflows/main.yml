@@ -1,0 +1,23 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天UTC时间0点自动运行（北京时间早上8点）
+  workflow_dispatch:     # 允许你随时在网页上手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream changes
+        uses: aormsby/sync-fork-action@v1  # 核心同步工具[reference:1]
+        with:
+          upstream_repository: cmliu/edgetunnel
+          upstream_branch: main  # 源项目的分支，通常是main或master
+          target_branch: main    # 你的目标分支，通常也是main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
